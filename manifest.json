@@ -1,0 +1,43 @@
+{
+  "manifest_version": 2,
+  "name": "uSpot - Spotify Adblocker",
+  "version": "2.0",
+  "description": "A browser extension that blocks Spotify web audio ads using the uBlock mv2 approach: blocked ads are replaced with a silent 1-second placeholder.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "spotify-adblock-ublock-method-mv2@local",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["none"],
+        "optional": []
+      }
+    }
+  },
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "storage",
+    "*://*.scdn.co/*",
+    "*://*.spotifycdn.com/*",
+    "*://open.spotify.com/*"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "uSpot - Spotify Adblocker",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "web_accessible_resources": ["noop-1s.mp4"]
+}
