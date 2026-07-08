@@ -1,0 +1,27 @@
+name: Build Firefox Extension
+
+on:
+  release:
+    types: [created]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create extension ZIP
+        run: |
+          zip -r uspot-${{ github.event.release.tag_name }}.zip . \
+          -x ".git/*" \
+          -x ".github/*"
+
+      - name: Upload ZIP to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: uspot-${{ github.event.release.tag_name }}.zip
