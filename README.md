@@ -23,6 +23,6 @@
 
 # See the extension in action:
 
-https://github.com/user-attachments/assets/bb4f24b9-9ca6-4cdc-8782-9e864636dee2
+(Attaching a video soon)
 
 
