@@ -9,3 +9,6 @@ A browser extension that blocks Spotify web audio ads using the uBlock mv2 appro
 1. uSpot repo > Click on the [Releases](https://github.com/Myst1cX/uSpot/releases/) tab > Download the signed xpi file 
 2. Firefox > Open Settings > About Firefox > Enable the hidden developer/debug menu (tap the Firefox logo 5 times)   
 3. Go back one screen > Choose Install extension from file > Select your signed .xpi file   
+
+# Ublock Origin vs uSpot (What is the difference?)
+uSpot essentially employs the same trick uBlock uses to block Spotify ads: it takes uBlock's own filter rules for Spotify's ad-audio CDN, and swaps the ad out for the same silent 1-second mp4 that uBlock uses. Only difference is that uSpot only focuses on intercepting audio ads. It doesn't detect ad banners or have cosmetic filtering that could remove the "Get Premium" button or other elements. This also means uBlock Origin will still prevail as the first choice for most people, since uBlock's list gets updated by the community while this extension has to be manually updated if Spotify changes CDN paths. Where uSpot makes sense is if you don't want or can't run a full ad blocker but still want the Spotify audio ads gone.
