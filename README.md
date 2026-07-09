@@ -11,8 +11,8 @@ A browser extension that blocks Spotify web audio ads using the uBlock mv2 appro
 3. Go back one screen > Choose Install extension from file > Select your signed .xpi file   
 
 # uSpot vs Ublock Origin (What is the difference?)
-uSpot essentially employs the same trick uBlock uses to block Spotify ads: it takes uBlock's own filter rules for Spotify's ad-audio CDN,    
-and swaps the ad out for the same silent 1-second mp4 that uBlock uses.   
+uSpot essentially employs the same trick uBlock uses to block Spotify ads: 
+it takes uBlock's own filter rules for Spotify's ad-audio CDN, and swaps the ad out for the same silent 1-second mp4 that uBlock uses.   
 Both extensions are limited to manifest v2 because the redirect relies on the blocking webRequest API, which Chrome's manifest v3 strips out    
 in favor of declarativeNetRequest — that's why this solution only works on Firefox and other non-Chromium forks, which still allow it.    
 The key difference is that uSpot only focuses on intercepting audio ads. It doesn't detect ad banners or have cosmetic filtering   
