@@ -20,3 +20,9 @@
 > This also means uBlock Origin will still prevail as the first choice for most people, since uBlock's list gets updated by the community while this extension has to be manually updated if Spotify
 > changes CDN paths.   
 > Where uSpot makes sense is if you don't want or can't run a full ad blocker but still want the Spotify audio ads gone.
+
+# See the extension in action:
+
+https://github.com/user-attachments/assets/bb4f24b9-9ca6-4cdc-8782-9e864636dee2
+
+
