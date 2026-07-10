@@ -21,11 +21,13 @@
 > changes CDN paths.   
 > Where uSpot makes sense is if you don't want or can't run a full ad blocker but still want the Spotify audio ads gone.
 
-> Keep in mind you can get still rid of the premium nags by coupling the extension with one of the following userscripts:   
-a) SpotiwebJS (Desktop, visual premium spoof only): [here](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiwebJS.js)      
-b) SpotiKitMobileDesktop (my 7.31.fork, mobile-like layout + visual premium spoof): [here](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiKitMobileDesktop.user.js)       
-c) SpotiKitUI (the successor of SpotiKitMobileDesktop): [here](https://raw.githubusercontent.com/kitbodega/SpotiKit/main/SpotiKitUI.user.js)    
-d) Spotifuck Userscript (mobile-like layout + visual premium spoof): [here](https://raw.githubusercontent.com/Myst1cX/spotifuck-userscript/main/spotifuck-v6.user.js)     
+> Keep in mind you can get still rid of the premium nags.
+1. Download a userscript manager (Recommended: [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey](https://www.tampermonkey.net/))
+2. Couple the uSpot extension with one of the following userscripts:   
+a) SpotiwebJS (Desktop, visual premium spoof only): [install](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiwebJS.js)      
+b) SpotiKitMobileDesktop (my 7.31.fork, mobile-like layout + visual premium spoof): [install](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiKitMobileDesktop.user.js)       
+c) SpotiKitUI (the successor of SpotiKitMobileDesktop): [install](https://raw.githubusercontent.com/kitbodega/SpotiKit/main/SpotiKitUI.user.js)    
+d) Spotifuck Userscript (mobile-like layout + visual premium spoof): [install](https://raw.githubusercontent.com/Myst1cX/spotifuck-userscript/main/spotifuck-v6.user.js)     
 
 # See the extension in action:
 
