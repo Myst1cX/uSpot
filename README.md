@@ -21,7 +21,7 @@
 > changes CDN paths.   
 > Where uSpot makes sense is if you don't want or can't run a full ad blocker but still want the Spotify audio ads gone.
 
-> Keep in mind you can get still rid of the premium nags.
+> **Keep in mind you can get still rid of the premium nags:**
 > 1. Download a userscript manager (Recommended: [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey](https://www.tampermonkey.net/))
 > 2. Couple the uSpot extension with one of the following userscripts:   
 > a) SpotiwebJS (Desktop, visual premium spoof only): [install](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiwebJS.js)      
