@@ -22,21 +22,20 @@
 > Where uSpot makes sense is if you don't want or can't run a full ad blocker but still want the Spotify audio ads gone.
 
 > Keep in mind you can get still rid of the premium nags.
-1. Download a userscript manager (Recommended: [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey](https://www.tampermonkey.net/))
-2. Couple the uSpot extension with one of the following userscripts:   
-a) SpotiwebJS (Desktop, visual premium spoof only): [install](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiwebJS.js)      
-b) SpotiKitMobileDesktop (my 7.31.fork, mobile-like layout + visual premium spoof): [install](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiKitMobileDesktop.user.js)       
-c) SpotiKitUI (the successor of SpotiKitMobileDesktop): [install](https://raw.githubusercontent.com/kitbodega/SpotiKit/main/SpotiKitUI.user.js)    
-d) Spotifuck Userscript (mobile-like layout + visual premium spoof): [install](https://raw.githubusercontent.com/Myst1cX/spotifuck-userscript/main/spotifuck-v6.user.js)
-3. On mobile, you will require a few more steps - tricking the browser with a User Agent:   
-4. Install Chameleon extension    
-5. Chameleon extension settings > Profile Panel (globe icon) > Select Random Profile (Desktop)   
-6. Chameleon extension settings > Options Panel > Select the 'Profile' option under the 'Screen size' option   
-7. Go back to Firefox browser > Firefox Settings > Site settings > Click on "DRM-controlled content" and select "Allowed"   
-8. Restart Firefox    
-9. Open Spotify Web and login to your account    
-10. The interface should be mobile-friendly > If it ever resets, try redoing the Chameleon extension configuration and refreshing the Spotify page   
-11. NOTE: Keep Desktop Mode (browser setting) disabled.  
+> 1. Download a userscript manager (Recommended: [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey](https://www.tampermonkey.net/))
+> 2. Couple the uSpot extension with one of the following userscripts:   
+> a) SpotiwebJS (Desktop, visual premium spoof only): [install](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiwebJS.js)      
+> b) SpotiKitMobileDesktop (my 7.31.fork, mobile-like layout + visual premium spoof): [install](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiKitMobileDesktop.user.js)       
+> c) SpotiKitUI (the successor of SpotiKitMobileDesktop): [install](https://raw.githubusercontent.com/kitbodega/SpotiKit/main/SpotiKitUI.user.js)    
+> d) Spotifuck Userscript (mobile-like layout + visual premium spoof): [install](https://raw.githubusercontent.com/Myst1cX/spotifuck-userscript/main/spotifuck-v6.user.js)> 3. On mobile, you will require a few more steps - tricking the browser with a User Agent:   
+> 4. Install Chameleon extension    
+> 5. Chameleon extension settings > Profile Panel (globe icon) > Select Random Profile (Desktop)   
+> 6. Chameleon extension settings > Options Panel > Select the 'Profile' option under the 'Screen size' option   
+> 7. Go back to Firefox browser > Firefox Settings > Site settings > Click on "DRM-controlled content" and select "Allowed"   
+> 8. Restart Firefox    
+> 9. Open Spotify Web and login to your account    
+> 10. The interface should be mobile-friendly > If it ever resets, try redoing the Chameleon extension configuration and refreshing the Spotify page   
+> 11. NOTE: Keep Desktop Mode (browser setting) disabled.  
 
 # See the extension in action:
 
