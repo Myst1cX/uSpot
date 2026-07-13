@@ -24,7 +24,7 @@
 > **Keep in mind you can get still rid of the premium nags:**
 > 1. Download a userscript manager (Recommended: [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey](https://www.tampermonkey.net/))
 > 2. Couple the uSpot extension with one of the following userscripts:   
-> a) SpotiwebJS (Desktop, visual premium spoof only): [install](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiwebJS.js)      
+> a) SpotiwebJS (Desktop, visual premium spoof only): [install](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiwebJS.user.js)      
 > b) SpotiKitMobileDesktop (my 7.31.fork, mobile-like layout + visual premium spoof): [install](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiKitMobileDesktop.user.js)       
 > c) SpotiKitUI (the successor of SpotiKitMobileDesktop): [install](https://raw.githubusercontent.com/kitbodega/SpotiKit/main/SpotiKitUI.user.js)    
 > d) Spotifuck Userscript (mobile-like layout + visual premium spoof): [install](https://raw.githubusercontent.com/Myst1cX/spotifuck-userscript/main/spotifuck-mobile.user.js)   
