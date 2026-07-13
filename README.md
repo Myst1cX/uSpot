@@ -28,7 +28,7 @@ b) Firefox:
 > changes CDN paths.   
 > Where uSpot makes sense is if you don't want a full adblock extension but only a solution to Spotify's audio ads.
 
-> **Keep in mind you can get still rid of the premium nags without uBlock:**
+> **Keep in mind you can get still rid of the premium nags without uBlock:**    
 > MORE INFO HERE: [SpotiKit](https://github.com/Myst1cX/SpotiKit#installation)    
 > Recommended setup: Spotifuck Mobile (mobile) + SpotiwebJS (desktop)   
  
