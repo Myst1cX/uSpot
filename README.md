@@ -26,7 +26,7 @@ b) Firefox:
 > The key difference is that uSpot only focuses on intercepting audio ads. It doesn't detect ad banners or have cosmetic filtering that could remove the "Get Premium" button or other premium nagging elements.   
 > This also means uBlock Origin will still prevail as the first choice for most people, since uBlock's list gets updated by the community while this extension has to be manually updated if Spotify
 > changes CDN paths.   
-> Where uSpot makes sense is if you don't want or can't run a full ad blocker but still want the Spotify audio ads gone.
+> Where uSpot makes sense is if you don't want a full adblock extension but only a solution to Spotify's audio ads.
 
 > **Keep in mind you can get still rid of the premium nags:**
 > 1. Download a userscript manager (Recommended: [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey](https://www.tampermonkey.net/))
