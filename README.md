@@ -5,12 +5,18 @@
 
 # Installation on a computer device
 > 1. uSpot repo > Click on the [Releases](https://github.com/Myst1cX/uSpot/releases/) tab > Download the signed xpi file 
-> 2. Firefox > Manage Extensions Settings (abot:addons page) > Install Add-on From File... > Select your signed .xpi file  
+> 2. Firefox > Manage Extensions Settings (abot:addons page) > Install Add-on From File... > Select the downloaded signed .xpi file  
 
 # Installation on a mobile device
+
+a) Quetta Browser: 
+> 1. uSpot repo > Click on the [Releases](https://github.com/Myst1cX/uSpot/releases/) tab > Download the signed xpi file
+> 2. Quetta Browser > Press on the three dots next to the search bar's tab counter. > Click on the Extensions tab > Manage Extensions > Developer options... > (from .zip/.crx/.user.js) > Select the downloaded signed .xpi file   
+>
+b) Firefox:
 > 1. uSpot repo > Click on the [Releases](https://github.com/Myst1cX/uSpot/releases/) tab > Download the signed xpi file 
 > 2. Firefox > Open Settings > About Firefox > Enable the hidden developer/debug menu (tap the Firefox logo 5 times)   
-> 3. Go back one screen > Choose Install extension from file > Select your signed .xpi file   
+> 3. Go back one screen > Choose Install extension from file > Select the downloaded signed .xpi file   
 
 # uSpot vs Ublock Origin (What is the difference?)
 > uSpot essentially employs the same trick uBlock uses to block Spotify ads:   
