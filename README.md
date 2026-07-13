@@ -29,21 +29,8 @@ b) Firefox:
 > Where uSpot makes sense is if you don't want a full adblock extension but only a solution to Spotify's audio ads.
 
 > **Keep in mind you can get still rid of the premium nags:**
-> 1. Download a userscript manager (Recommended: [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey](https://www.tampermonkey.net/))
-> 2. Couple the uSpot extension with one of the following userscripts:   
-> a) SpotiwebJS (Desktop, visual premium spoof only): [install](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiwebJS.user.js)      
-> b) SpotiKitMobileDesktop (my 7.31.fork, mobile-like layout + visual premium spoof): [install](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiKitMobileDesktop.user.js)       
-> c) SpotiKitUI (the successor of SpotiKitMobileDesktop): [install](https://raw.githubusercontent.com/kitbodega/SpotiKit/main/SpotiKitUI.user.js)    
-> d) Spotifuck Userscript (mobile-like layout + visual premium spoof): [install](https://raw.githubusercontent.com/Myst1cX/spotifuck-userscript/main/spotifuck-mobile.user.js)   
-> 3. On mobile, you will require a few more steps - tricking the browser with a User Agent:   
-> 4. Install [Chameleon](https://addons.mozilla.org/en-US/android/addon/chameleon-ext/) extension    
-> 5. Chameleon extension settings > Profile Panel (globe icon) > Select Random Profile (Desktop)   
-> 6. Chameleon extension settings > Options Panel > Select the 'Profile' option under the 'Screen size' option   
-> 7. Go back to Firefox browser > Firefox Settings > Site settings > Click on "DRM-controlled content" and select "Allowed"   
-> 8. Restart Firefox    
-> 9. Open Spotify Web and login to your account    
-> 10. The interface should be mobile-friendly > If it ever resets, try redoing the Chameleon extension configuration and refreshing the Spotify page   
-> 11. NOTE: Keep Desktop Mode (browser setting) disabled.  
+> MORE INFO HERE: [SpotiKit](https://github.com/Myst1cX/SpotiKit#installation)
+> Recommended setup: Spotifuck Mobile (mobile) + SpotiwebJS (desktop)
 
 # See the extension in action:
 
