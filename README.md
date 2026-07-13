@@ -27,7 +27,7 @@
 > a) SpotiwebJS (Desktop, visual premium spoof only): [install](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiwebJS.js)      
 > b) SpotiKitMobileDesktop (my 7.31.fork, mobile-like layout + visual premium spoof): [install](https://raw.githubusercontent.com/Myst1cX/SpotiKit/main/SpotiKitMobileDesktop.user.js)       
 > c) SpotiKitUI (the successor of SpotiKitMobileDesktop): [install](https://raw.githubusercontent.com/kitbodega/SpotiKit/main/SpotiKitUI.user.js)    
-> d) Spotifuck Userscript (mobile-like layout + visual premium spoof): [install](https://raw.githubusercontent.com/Myst1cX/spotifuck-userscript/main/spotifuck-v6.user.js)   
+> d) Spotifuck Userscript (mobile-like layout + visual premium spoof): [install](https://raw.githubusercontent.com/Myst1cX/spotifuck-userscript/main/spotifuck-mobile.user.js)   
 > 3. On mobile, you will require a few more steps - tricking the browser with a User Agent:   
 > 4. Install [Chameleon](https://addons.mozilla.org/en-US/android/addon/chameleon-ext/) extension    
 > 5. Chameleon extension settings > Profile Panel (globe icon) > Select Random Profile (Desktop)   
