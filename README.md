@@ -38,5 +38,6 @@ b) Firefox:
 
 # See the extension in action:
 
-<img width="306" height="248" alt="image" src="https://github.com/user-attachments/assets/115f1e92-07de-490c-a4cc-0c2f879ea519" />
+<img width="305" height="247" alt="image" src="https://github.com/user-attachments/assets/afb08475-412f-413f-80ba-485cf94a9141" />
+
 
