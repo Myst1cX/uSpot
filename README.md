@@ -30,14 +30,16 @@ b) Firefox:
 
 # uSpot vs Ublock Origin (What is the difference?)
 
-> uSpot essentially employs the same trick uBlock uses to block Spotify ads:it takes uBlock's own filter rules for Spotify's ad-audio CDN, and swaps the ad out for the same silent 1-second mp4 that uBlock uses.  Both extensions are limited to manifest v2 because the redirect relies on the blocking webRequest API, which Chrome's manifest v3 strips out in favor of declarativeNetRequest - that's why this solution will only work on non-Chromium browsers and Chromium forks that still allow manifest v2.The key difference is that uSpot only focuses on intercepting audio ads. It doesn't detect ad banners or have cosmetic filtering that could remove the "Get Premium" button or other premium nagging elements.This also means uBlock Origin will still prevail as the first choice for most people, since uBlock's list gets updated by the community while this extension has to be manually updated if Spotifychanges CDN paths.Where uSpot makes sense is if you don't want a full adblock extension but only a solution to Spotify's audio ads.
+> uSpot essentially employs the same trick uBlock uses to block Spotify ads: it takes uBlock's own filter rules for Spotify's ad-audio CDN, and swaps the ad out for the same silent 1-second mp4 that uBlock uses. Both extensions are limited to manifest v2 because the redirect relies on the blocking webRequest API, which Chrome's manifest v3 strips out in favor of declarativeNetRequest - that's why this solution will only work on non-Chromium browsers and Chromium forks that still allow manifest v2.
 
-> **Keep in mind you can get still rid of the premium nags without uBlock:**   
+> As of version 3.1, uSpot is no longer just a single-filter-list redirect, though. It now runs three layers: the original uBlock-derived CDN redirect, an **instant mode** listener (ported from Spotiduck) that blocks known ad-network/telemetry hosts on Spotify tabs (doubleclick.net, googlesyndication.com, fastly-insights.com, sentry.io, 2mdn.net, adxcel.com, amillionads.com), and a **DOM-based ad-break detector** (selectors sourced from Blockify) that mutes the tab and widens the redirect to any unlisted host the moment ad-break UI appears - a fallback for when Spotify serves an ad from a CDN not covered by the static filter list. The popup reflects this with two separate counters: ads blocked vs. trackers/telemetry blocked.
+
+> The key difference from uBlock is scope: uSpot focuses solely on Spotify's audio ads and the network activity around them. It still doesn't do cosmetic filtering - it won't remove ad banners, the "Get Premium" button, or other premium-nagging UI elements that uBlock can remove.
+
+> **Keep in mind you can still get rid of the premium nags without uBlock:**   
 > MORE INFO HERE: [SpotiKit](https://github.com/Myst1cX/SpotiKit#installation)   
 > Recommended setup: Spotifuck Mobile (mobile) or SpotiwebJS (desktop)
 
 # See the extension in action:
 
 <img width="305" height="247" alt="image" src="https://github.com/user-attachments/assets/afb08475-412f-413f-80ba-485cf94a9141" />
-
-
