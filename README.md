@@ -10,7 +10,7 @@
 
 # Installation on a computer
 
-a) Firefox:
+a) Firefox and its forks:
 
 > 1. uSpot repo > Click on the [Releases](https://github.com/Myst1cX/uSpot/releases/) tab > Download the signed xpi file
 > 2. Firefox > Manage Extensions Settings (abot:addons page) > Install Add-on From File... > Select the downloaded signed .xpi file
