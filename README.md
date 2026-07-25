@@ -7,8 +7,6 @@
 > Two extra layers back that up: a DOM-based ad-break detector mutes the tab and widens the redirect to any unlisted host the moment ad UI shows up, and an "instant mode" listener (ported from Spotiduck app) blocks known ad-network/telemetry hosts on Spotify tabs.   
 > The popup shows these as two separate counts - ads blocked, and trackers/telemetry blocked - since not every blocked request is an audible one.
 
-<img width="306" height="248" alt="image" src="https://github.com/user-attachments/assets/6f228a4e-d772-435b-9fc8-e285ed7e4c62" />
-
 
 # Installation on a computer
 
@@ -40,4 +38,5 @@ b) Firefox:
 
 # See the extension in action:
 
-(Attaching a video soon)
+<img width="306" height="248" alt="image" src="https://github.com/user-attachments/assets/115f1e92-07de-490c-a4cc-0c2f879ea519" />
+
