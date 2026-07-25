@@ -34,7 +34,7 @@ b) Firefox:
 
 > As of version 3.1, uSpot is no longer just a single-filter-list redirect, though. It now runs three layers: the original uBlock-derived CDN redirect, an **instant mode** listener (ported from Spotiduck) that blocks known ad-network/telemetry hosts on Spotify tabs (doubleclick.net, googlesyndication.com, fastly-insights.com, sentry.io, 2mdn.net, adxcel.com, amillionads.com), and a **DOM-based ad-break detector** (selectors sourced from Blockify) that mutes the tab and widens the redirect to any unlisted host the moment ad-break UI appears - a fallback for when Spotify serves an ad from a CDN not covered by the static filter list. The popup reflects this with two separate counters: ads blocked vs. trackers/telemetry blocked.
 
-> The key difference from uBlock is scope: uSpot focuses solely on Spotify's audio ads and the network activity around them.
+> The key difference from uBlock is scope: uSpot focuses solely on Spotify's audio ads and the network activity around them.   
 > It still doesn't do cosmetic filtering - it won't remove ad banners, the "Get Premium" button, or other premium-nagging UI elements that uBlock can remove.
 
 > **Keep in mind you can still get rid of the premium nags without uBlock:**   
