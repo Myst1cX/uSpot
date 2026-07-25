@@ -33,7 +33,7 @@ b) Firefox:
 
 > **Keep in mind you can get still rid of the premium nags without uBlock:**   
 > MORE INFO HERE: [SpotiKit](https://github.com/Myst1cX/SpotiKit#installation)   
-> Recommended setup: Spotifuck Mobile (mobile) + SpotiwebJS (desktop)
+> Recommended setup: Spotifuck Mobile (mobile) or SpotiwebJS (desktop)
 
 # See the extension in action:
 
