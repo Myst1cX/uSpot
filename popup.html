@@ -18,10 +18,15 @@
     font-weight: 600;
   }
   .count {
-    font-size: 32px;
+    font-size: 26px;
     font-weight: 700;
     color: #1db954;
     line-height: 1;
+  }
+  .count.secondary {
+    font-size: 26px;
+    color: #b3b3b3;
+    margin-top: 12px;
   }
   .label {
     font-size: 12px;
@@ -46,9 +51,11 @@
 </head>
 <body>
   <h3>uSpot - Spotify Adblocker</h3>
-  <div class="count" id="count">0</div>
-  <div class="label">ad requests blocked</div>
-  <button id="reset">Reset counter</button>
+  <div class="count" id="adCount">0</div>
+  <div class="label">ads blocked</div>
+  <div class="count secondary" id="otherCount">0</div>
+  <div class="label">trackers/telemetry blocked</div>
+  <button id="reset">Reset counters</button>
   <script src="popup.js"></script>
 </body>
 </html>

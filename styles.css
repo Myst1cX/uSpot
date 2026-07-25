@@ -1,0 +1,24 @@
+/* uSpot - Spotify Adblocker: visual ad-companion card hide
+ *
+ * [data-testid="ad-companion-card"] only exists in the DOM while an ad
+ * is actively showing (confirmed live against the current web player).
+ *
+ * NOTE: this rule alone is not reliable on the current web player. Live
+ * testing showed the selector and markup match exactly, but the card
+ * still renders - Spotify's own design system ("Encore") appears to use
+ * CSS cascade layers, and a layered !important declaration beats an
+ * unlayered one like this regardless of specificity. The actual hide now
+ * happens from content_script.js, which sets display via inline style
+ * (which sits above layers entirely) on the matched element as soon as
+ * it's detected. This rule is left in as a zero-cost first frame of
+ * defense in case it does apply before the JS runs - it is not the
+ * primary mechanism anymore.
+ *
+ * Neither uBlock's bundled filter rule nor the Blockify extension
+ * (both reference-checked) actually hide this card - they only use its
+ * presence as a signal for other things (traffic redirect / tab mute).
+ * This is a genuine addition, not a port.
+ */
+[data-testid="ad-companion-card"] {
+    display: none !important;
+}
