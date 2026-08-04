@@ -42,4 +42,5 @@ b) Firefox:
 
 # See the extension in action:
 
-<img width="305" height="247" alt="image" src="https://github.com/user-attachments/assets/afb08475-412f-413f-80ba-485cf94a9141" />
+<img width="300" height="242" alt="image" src="https://github.com/user-attachments/assets/805d03e9-2470-4ba4-b07e-de3561a20fdc" />
+
