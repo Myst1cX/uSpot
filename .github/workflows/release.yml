@@ -19,7 +19,12 @@ jobs:
         run: |
           zip -r uspot-${{ github.event.release.tag_name }}.zip . \
           -x ".git/*" \
-          -x ".github/*"
+          -x ".github/*" \
+          -x "scripts/*" \
+          -x "tests/*" \
+          -x "hosts/README.md" \
+          -x "hosts/extra_hosts.txt" \
+          -x "hosts/allow_hosts.txt"
 
       - name: Upload ZIP to release
         uses: softprops/action-gh-release@v2

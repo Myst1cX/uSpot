@@ -1,0 +1,43 @@
+name: Update AdBlock Hosts
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # daily at 03:00 UTC
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/update-adblock-hosts.yml'
+      - 'scripts/compile_hosts.py'
+      - 'hosts/extra_hosts.txt'
+      - 'hosts/allow_hosts.txt'
+      - 'hosts/podcast_ad_hosts.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  update-hosts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Compile hosts/adblock_hosts.txt
+        run: python3 scripts/compile_hosts.py
+
+      - name: Commit via API (verified)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FILE: hosts/adblock_hosts.txt
+        run: |
+          git diff --quiet -- "$FILE" && exit 0   # nothing changed
+          SHA=$(gh api "repos/$GITHUB_REPOSITORY/contents/$FILE?ref=$GITHUB_REF_NAME" --jq .sha 2>/dev/null || true)
+          gh api -X PUT "repos/$GITHUB_REPOSITORY/contents/$FILE" \
+            -f message="chore(adblock): auto-update compiled $FILE" \
+            -f content="$(base64 -w0 "$FILE")" \
+            -f branch="$GITHUB_REF_NAME" \
+            ${SHA:+-f sha="$SHA"}
