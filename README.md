@@ -40,6 +40,24 @@ b) Firefox:
 > MORE INFO HERE: [SpotiKit](https://github.com/Myst1cX/SpotiKit#installation)   
 > Recommended setup: Spotifuck Mobile (mobile) or SpotiwebJS (desktop)
 
+# What's new in 3.2
+
+> - **Page hook** (on by default): leaves ad tracks out of Spotify's playback state, so the player skips them instead of waiting for the ad to show and then muting it. Ported from the author's Spotify Web app. Can be switched off in the popup.
+> - **First-party ad hosts**: the 11 Spotify-owned ad/tracking hosts are now blocked too, with no extra permission.
+> - **Full ad-host list** (off by default): about 1,200 hosts, compiled daily on GitHub (`hosts/`) and downloaded by the extension. It needs the optional "access all sites" permission, is only applied to requests from open.spotify.com tabs, and never touches core Spotify hosts (a whitelist ported from the app, including the `-spclient.spotify.com` family, is checked in code). Nothing is downloaded unless you turn this on. A copy ships inside the extension as the offline fallback.
+> - **Podcast ad hosts** and **Canvas video blocking**: optional, off by default.
+> - **Ad audio file IDs**: when the hook sees an ad's audio file IDs, requests containing them get the silent clip.
+>
+> All options are in the popup. How every layer works: `USPOT_ADBLOCK_METHOD.md`.
+
+# Privacy
+
+> uSpot collects nothing. The only network request it makes itself is the optional host-list download from `raw.githubusercontent.com` (GitHub sees your IP address and the request, like any download), and only after you enable the list or podcast option.
+
+# Development
+
+> `node tests/hosts.test.js`, `node tests/background.test.js` and `node tests/hook_relay.test.js` run the unit tests (no dependencies). The host list is rebuilt by `.github/workflows/update-adblock-hosts.yml`; see `hosts/README.md`.
+
 # See the extension in action:
 
 <img width="300" height="242" alt="image" src="https://github.com/user-attachments/assets/805d03e9-2470-4ba4-b07e-de3561a20fdc" />

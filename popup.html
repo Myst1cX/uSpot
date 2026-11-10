@@ -6,7 +6,7 @@
 <style>
   body {
     font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
-    width: 220px;
+    width: 250px;
     padding: 14px;
     margin: 0;
     background: #121212;
@@ -47,6 +47,53 @@
   button:hover {
     background: #333;
   }
+  .settings {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #282828;
+  }
+  .settings h4 {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #b3b3b3;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    margin: 7px 0;
+    cursor: pointer;
+  }
+  .opt input {
+    margin: 2px 0 0;
+    accent-color: #1db954;
+  }
+  .opt small {
+    display: block;
+    color: #b3b3b3;
+    font-size: 11px;
+    margin-top: 1px;
+  }
+  .opt.sub {
+    margin-left: 22px;
+  }
+  .status {
+    font-size: 11px;
+    color: #b3b3b3;
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+  .status.warn {
+    color: #f5a623;
+  }
+  button.small {
+    margin-top: 8px;
+    padding: 5px;
+  }
 </style>
 </head>
 <body>
@@ -56,6 +103,24 @@
   <div class="count secondary" id="otherCount">0</div>
   <div class="label">trackers/telemetry blocked</div>
   <button id="reset">Reset counters</button>
+
+  <div class="settings">
+    <h4>Options</h4>
+    <label class="opt"><input type="checkbox" id="hook">
+      <span>Skip ads in the player<small>Page hook: leaves ads out of the playback state</small></span></label>
+    <label class="opt sub"><input type="checkbox" id="recovery">
+      <span>Recovery watchdog<small>Only acts if an ad break gets stuck</small></span></label>
+    <label class="opt"><input type="checkbox" id="fullList">
+      <span>Full ad-host list<small>Downloaded daily from GitHub. Asks for an extra permission</small></span></label>
+    <label class="opt"><input type="checkbox" id="podcast">
+      <span>Podcast ad hosts<small>Same permission and download</small></span></label>
+    <label class="opt"><input type="checkbox" id="canvas">
+      <span>Block Canvas videos<small>Looping artist videos</small></span></label>
+    <label class="opt"><input type="checkbox" id="debug">
+      <span>Debug logging<small>Console output, for troubleshooting</small></span></label>
+    <div class="status" id="listStatus"></div>
+    <button class="small" id="updateNow" hidden>Update lists now</button>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>

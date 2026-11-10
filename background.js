@@ -16,6 +16,11 @@
 //   these rules is this extension's own code, not copied from uBlock
 //   Origin's traffic.js.
 //
+// Later layers (see USPOT_ADBLOCK_METHOD.md): the first-party ad-host list,
+// the downloaded host list, the never-block whitelist (lib/hosts.js), ad
+// audio file IDs and the page hook are ported from the Spotify Web app,
+// which in turn follows SpotiDuck (GPL-3.0) - see CREDITS.md.
+//
 // uBlock Origin: Copyright (C) Raymond Hill and contributors. GPLv3.
 // https://github.com/gorhill/uBlockOrigin
 // Full attribution and license text: CREDITS.md, LICENSE.txt.
@@ -62,7 +67,24 @@ function storageSet(items) {
 
 // Set to false to quiet this back down once you're done digging - it's
 // purely diagnostic, doesn't affect blocking behavior either way.
-const DEBUG = true;
+let DEBUG = true;
+
+// UspotHosts comes from lib/hosts.js (listed before this file in manifest.json).
+const U = UspotHosts;
+
+// --- settings -----------------------------------------------------------
+// Stored under one storage.local key ("settings"), separate from the counters
+// on purpose: the only storage.onChanged listener below reacts to this key
+// alone, so it can never feed back into the counter increment path.
+const DEFAULT_SETTINGS = {
+    hook: true,       // page hook: leave ads out of the playback state (hook.js, MAIN world)
+    recovery: true,   // hook's recovery watchdog (only loads a song if a break is stuck)
+    fullList: false,  // downloaded host list (needs the optional <all_urls> permission)
+    podcast: false,   // podcast ad hosts (omny.fm etc.), same permission
+    canvas: false,    // empty-200 Canvas videos, as the app does
+    debug: true       // console logging (was the DEBUG constant)
+};
+let settings = Object.assign({}, DEFAULT_SETTINGS);
 
 // background.js has no DOM of its own (it's the extension process, not the
 // page) - it only ever sees request metadata (url/type/tabId/etc). To get
@@ -231,13 +253,21 @@ storageGet(['blockedAdCount', 'blockedOtherCount']).then((result) => {
 // Also handles muteTab/Unmute from content_script.js's ad-break DOM
 // fallback - same listener, no new one. This both mutes/unmutes the tab
 // and toggles adBreakActive, which the webRequest listener below reads.
-api.runtime.onMessage.addListener((message, sender) => {
+api.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message && message.type === 'resetBlockedCount') {
         blockedAdCount = 0;
         blockedOtherCount = 0;
         pendingAdIncrements = 0;
         pendingOtherIncrements = 0;
         return;
+    }
+    if (message && message.type === 'uspotAdIds' && sender.tab) {
+        setAdIds(message.ids);
+        return;
+    }
+    if (message && message.type === 'refreshHostLists') {
+        refreshLists().then((meta) => sendResponse(meta));
+        return true; // keep the channel open for the async reply
     }
     if (message && message.muteTab && sender.tab) {
         adBreakActive = true;
@@ -271,6 +301,20 @@ api.runtime.onMessage.addListener((message, sender) => {
 api.webRequest.onBeforeRequest.addListener(
     (details) => {
         const known = isKnownAdHost(details.url);
+
+        // Canvas videos (opt-in, popup setting): the app answers them with an
+        // empty 200 after the whitelist check, so media hosts the app
+        // whitelists (video-fa.scdn.co etc.) are never touched.
+        if (!known && settings.canvas && U.isCanvasUrl(details.url) &&
+            !U.isWhitelisted(U.hostFromUrl(details.url))) {
+            return { redirectUrl: EMPTY_URL };
+        }
+
+        // First-party ad hosts have their own listener further down; skipping
+        // them here keeps one request from being redirected/counted twice.
+        if (!known && U.hostBlocklistMatch(FIRST_PARTY_SET, U.hostFromUrl(details.url))) {
+            return {};
+        }
 
         if (!known && !adBreakActive) {
             return {};
@@ -343,8 +387,10 @@ function matchesInstantModeAdDomain(url) {
 // URL patterns everywhere would make this a general-purpose blocker,
 // which isn't this extension's job.
 function isFromSpotifyTab(details) {
+    // Hostname comparison, not a substring test: a substring test would also
+    // accept e.g. https://evil.example/?open.spotify.com.
     const origin = details.documentUrl || details.originUrl || details.initiator || '';
-    return origin.indexOf('open.spotify.com') !== -1;
+    return U.hostFromUrl(origin) === 'open.spotify.com';
 }
 
 api.webRequest.onBeforeRequest.addListener(
@@ -394,5 +440,372 @@ api.webRequest.onBeforeRequest.addListener(
     ['blocking']
 );
 
+// --- Layer 3b: first-party Spotify ad hosts (built in, no extra permission) -
+//
+// The 11 first-party ad/tracking hosts the Spotify Web app hardcodes and
+// lists in hosts/extra_hosts.txt. They sit under spotify.com / scdn.co, which
+// the manifest already has host permission for, so this works on a default
+// install. Same order of checks as the app's shouldIntercept():
+//   whitelist -> static-asset exit -> match -> media: silent clip / else: empty
+// (the canvas step is Layer 1's opt-in branch above).
+const FIRST_PARTY_AD_HOSTS = [
+    'audio-ads.spotify.com',
+    'ads-akp.spotify.com',
+    'ads-fa.spotify.com',
+    'ads-fa.scdn.co',
+    'mp3ad.scdn.co',
+    'adstudio-assets.scdn.co',
+    'adstudio.spotify.com',
+    'adeventtracker.spotify.com',
+    'pixel.spotify.com',
+    'pixel-static.spotify.com',
+    'aet.spotify.com'
+];
+const FIRST_PARTY_SET = new Set(FIRST_PARTY_AD_HOSTS);
+
+// Hosts covered by the built-in listeners (Layer 3 + 3b). The downloaded-list
+// listener skips these so a request is never handled twice.
+function matchesBuiltinHost(url, host) {
+    return matchesInstantModeAdDomain(url) || U.hostBlocklistMatch(FIRST_PARTY_SET, host);
+}
+
+// Shared body for host-based blocking (Layer 3b and the downloaded list).
+// `matches(host, url)` decides whether the host is on the list in question.
+function blockByHost(details, matches) {
+    if (!isFromSpotifyTab(details)) {
+        return {};
+    }
+    const host = U.hostFromUrl(details.url);
+    // Whitelist first, exactly like the app: core Spotify hosts (19 exact +
+    // the "-spclient.spotify.com" suffix family) are never blocked by host.
+    if (!host || U.isWhitelisted(host)) {
+        return {};
+    }
+    // The app lets static assets through (.js .css .png ...) - same here.
+    if (U.isStaticAsset(details.url)) {
+        return {};
+    }
+    // Known ad-audio paths are Layer 1's job.
+    if (details.type === 'media' && isKnownAdHost(details.url)) {
+        return {};
+    }
+    if (!matches(host, details.url)) {
+        return {};
+    }
+    const category = adBreakActive ? 'ad' : 'other';
+    incrementBlockedCount(category);
+    if (DEBUG) {
+        console.log('[uSpot] Blocked by host list -', details.url, '- type:', details.type, '- counted as:', category);
+    }
+    return { redirectUrl: details.type === 'media' ? SILENT_MP4_URL : EMPTY_URL };
+}
+
+api.webRequest.onBeforeRequest.addListener(
+    (details) => blockByHost(details, (host) => U.hostBlocklistMatch(FIRST_PARTY_SET, host)),
+    { urls: U.hostsToPatterns(FIRST_PARTY_AD_HOSTS) },
+    ['blocking']
+);
+
+// --- Layer 4: downloaded host list (+ podcast hosts), optional permission ---
+//
+// hosts/adblock_hosts.txt is compiled daily by the GitHub workflow and
+// downloaded here. The bundled copy in the package is the offline fallback.
+// Needs the optional <all_urls> host permission (requested from the popup),
+// because the listed hosts are arbitrary third parties. Still scoped to
+// requests that originate from open.spotify.com tabs (isFromSpotifyTab).
+//
+// Trust model: this is DATA, never code. The client checks what the app
+// doesn't: a minimum size, a parse-error ceiling, a shrink guard, and it drops
+// any entry that could block a whitelisted host or a bare Spotify root
+// (U.isProtectedEntry). The repository owner still decides what is listed.
+const REMOTE_LIST_URL = 'https://raw.githubusercontent.com/Myst1cX/uSpot/main/hosts/adblock_hosts.txt';
+const REMOTE_PODCAST_URL = 'https://raw.githubusercontent.com/Myst1cX/uSpot/main/hosts/podcast_ad_hosts.txt';
+const MAX_LIST_BYTES = 2 * 1024 * 1024;
+const REFRESH_ALARM = 'uspot-refresh-hosts';
+const REFRESH_MINUTES = 12 * 60;
+
+let listHosts = [];
+let podcastHosts = [];
+let activeSet = new Set();
+let hostListener = null;
+let listMeta = { source: 'bundled', count: 0, podcastCount: 0, fetchedAt: 0, error: '', dropped: 0 };
+
+function permContains(perms) {
+    if (IS_FIREFOX_NATIVE) {
+        return browser.permissions.contains(perms).catch(() => false);
+    }
+    return new Promise((resolve) => {
+        chrome.permissions.contains(perms, (ok) => resolve(Boolean(ok)));
+    });
+}
+
+async function fetchText(url) {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), 10000);
+    try {
+        // no-cache = always revalidate with the server (conditional GET), so a
+        // 304 costs almost nothing; credentials omitted, nothing is sent but the request.
+        const res = await fetch(url, { cache: 'no-cache', credentials: 'omit', signal: ctl.signal });
+        if (res.status !== 200) {
+            throw new Error('HTTP ' + res.status);
+        }
+        const text = await res.text();
+        if (text.length > MAX_LIST_BYTES) {
+            throw new Error('response too large');
+        }
+        return text;
+    } finally {
+        clearTimeout(timer);
+    }
+}
+
+async function bundledHosts(file) {
+    const res = await fetch(api.runtime.getURL(file));
+    return U.parseHostsText(await res.text()).hosts;
+}
+
+async function initLists() {
+    const st = await storageGet(['hostsList', 'podcastList', 'hostsMeta']);
+    let source = 'cached';
+    if (Array.isArray(st.hostsList) && st.hostsList.length) {
+        listHosts = st.hostsList.filter((h) => U.isValidHostname(h));
+    } else {
+        listHosts = await bundledHosts('hosts/adblock_hosts.txt');
+        source = 'bundled';
+    }
+    if (Array.isArray(st.podcastList) && st.podcastList.length) {
+        podcastHosts = st.podcastList.filter((h) => U.isValidHostname(h));
+    } else {
+        podcastHosts = await bundledHosts('hosts/podcast_ad_hosts.txt');
+    }
+    listMeta = Object.assign(
+        { source, fetchedAt: 0, error: '' },
+        st.hostsMeta || {},
+        { source: st.hostsMeta && st.hostsMeta.source ? st.hostsMeta.source : source }
+    );
+    rebuildActive();
+}
+
+function rebuildActive() {
+    const hosts = [];
+    if (settings.fullList) {
+        Array.prototype.push.apply(hosts, listHosts);
+    }
+    if (settings.podcast) {
+        Array.prototype.push.apply(hosts, podcastHosts);
+    }
+    const built = U.buildSet(hosts);
+    activeSet = built.set;
+    listMeta.count = listHosts.length;
+    listMeta.podcastCount = podcastHosts.length;
+    listMeta.dropped = built.dropped;
+}
+
+// Serialised so two overlapping triggers (settings change + refresh +
+// permission event) can never leave two listeners registered.
+let syncChain = Promise.resolve();
+function syncHostListener() {
+    syncChain = syncChain.then(doSyncHostListener).catch((e) => console.error('[uSpot] host listener sync failed:', e));
+    return syncChain;
+}
+
+async function doSyncHostListener() {
+    if (hostListener) {
+        try {
+            api.webRequest.onBeforeRequest.removeListener(hostListener);
+        } catch (e) { /* already gone */ }
+        hostListener = null;
+    }
+    if (!activeSet.size) {
+        return;
+    }
+    if (!(await permContains({ origins: ['<all_urls>'] }))) {
+        console.log('[uSpot] Host list is enabled but the extra permission has not been granted - open the popup and allow it');
+        return;
+    }
+    const listener = (details) => blockByHost(
+        details,
+        (host, url) => !matchesBuiltinHost(url, host) && U.hostBlocklistMatch(activeSet, host)
+    );
+    try {
+        // Only requests to listed hosts reach the callback.
+        api.webRequest.onBeforeRequest.addListener(listener, { urls: U.hostsToPatterns(Array.from(activeSet)) }, ['blocking']);
+        console.log('[uSpot] Host list active -', activeSet.size, 'hosts');
+    } catch (e) {
+        // Fallback if the browser rejects that many patterns: every request
+        // reaches the callback, which does the host check itself.
+        console.warn('[uSpot] Pattern filter rejected (' + e + '), falling back to <all_urls> with an in-callback check');
+        api.webRequest.onBeforeRequest.addListener(listener, { urls: ['<all_urls>'] }, ['blocking']);
+        console.log('[uSpot] Host list active (fallback) -', activeSet.size, 'hosts');
+    }
+    hostListener = listener;
+}
+
+let refreshing = null;
+function refreshLists() {
+    if (!refreshing) {
+        refreshing = doRefresh().finally(() => { refreshing = null; });
+    }
+    return refreshing;
+}
+
+async function doRefresh() {
+    const meta = Object.assign({}, listMeta);
+    try {
+        const parsed = U.parseHostsText(await fetchText(REMOTE_LIST_URL));
+        const verdict = U.validateList(parsed, { minCount: 500, previousCount: listHosts.length });
+        if (!verdict.ok) {
+            throw new Error('list rejected: ' + verdict.reason);
+        }
+        listHosts = parsed.hosts;
+        await storageSet({ hostsList: listHosts });
+        meta.source = 'remote';
+        meta.fetchedAt = Date.now();
+        meta.error = '';
+    } catch (e) {
+        meta.error = String((e && e.message) || e);
+        console.warn('[uSpot] Host list refresh failed, keeping the current list:', meta.error);
+    }
+    if (settings.podcast) {
+        try {
+            const parsed = U.parseHostsText(await fetchText(REMOTE_PODCAST_URL));
+            const verdict = U.validateList(parsed, { minCount: 1 });
+            if (!verdict.ok || parsed.hosts.length > 200) {
+                throw new Error('podcast list rejected: ' + (verdict.reason || 'too many entries'));
+            }
+            podcastHosts = parsed.hosts;
+            await storageSet({ podcastList: podcastHosts });
+        } catch (e) {
+            meta.error = (meta.error ? meta.error + '; ' : '') + String((e && e.message) || e);
+        }
+    }
+    listMeta = meta;
+    rebuildActive();
+    await storageSet({ hostsMeta: listMeta });
+    await syncHostListener();
+    return listMeta;
+}
+
+// --- Layer 5: ad audio file IDs (from the page hook) ----------------------
+//
+// hook.js reads Spotify's player state and reports the audio file IDs of
+// tracks flagged as ads. A request whose URL contains one of those IDs is
+// answered with the silent clip, even when it comes from a CDN host that
+// looks like music. Runs BEFORE any whitelist, like the app: ad audio can be
+// served from whitelisted audio CDN hosts. Known to be inert for ads that
+// carry no IDs (the app's own logs showed 0 IDs on every ad it saw).
+//
+// The listener is only registered while IDs exist, so normal playback does
+// not pay for a callback on every scdn.co request.
+let adIds = [];
+let idListener = null;
+
+function setAdIds(ids) {
+    const clean = U.sanitizeAdIds(ids, 32);
+    if (clean.length === adIds.length && clean.every((id, i) => id === adIds[i])) {
+        return;
+    }
+    adIds = clean;
+    syncIdListener();
+    if (DEBUG) {
+        console.log('[uSpot] Ad audio IDs from the page hook:', adIds.length);
+    }
+}
+
+function syncIdListener() {
+    if (idListener) {
+        try {
+            api.webRequest.onBeforeRequest.removeListener(idListener);
+        } catch (e) { /* already gone */ }
+        idListener = null;
+    }
+    if (!adIds.length) {
+        return;
+    }
+    idListener = (details) => {
+        if (details.url.length < 8) {
+            return {};
+        }
+        // Media from known ad hosts / during a detected break is Layer 1's.
+        if (details.type === 'media' && (isKnownAdHost(details.url) || adBreakActive)) {
+            return {};
+        }
+        if (!adIds.some((id) => details.url.indexOf(id) !== -1)) {
+            return {};
+        }
+        incrementBlockedCount('ad');
+        console.log('[uSpot] Blocked ad audio - matched an ad file ID -', details.url, '- type:', details.type);
+        return { redirectUrl: SILENT_MP4_URL };
+    };
+    api.webRequest.onBeforeRequest.addListener(
+        idListener,
+        {
+            urls: ['*://*.scdn.co/*', '*://*.spotifycdn.com/*', '*://*.spotify.com/*'],
+            types: ['media', 'xmlhttprequest', 'other']
+        },
+        ['blocking']
+    );
+}
+
+// --- settings + lifecycle ---------------------------------------------------
+function applySettings(stored) {
+    settings = Object.assign({}, DEFAULT_SETTINGS, stored || {});
+    DEBUG = Boolean(settings.debug);
+}
+
+function listsWanted() {
+    return Boolean(settings.fullList || settings.podcast);
+}
+
+api.storage.onChanged.addListener((changes, area) => {
+    // Only the settings key. Counter writes (blockedAdCount etc.) never reach
+    // the code below, see the note on the reset handler.
+    if (area !== 'local' || !changes.settings) {
+        return;
+    }
+    const before = settings;
+    applySettings(changes.settings.newValue);
+    const turnedOn =
+        (settings.fullList && !before.fullList) ||
+        (settings.podcast && !before.podcast);
+    if (turnedOn) {
+        refreshLists();
+    } else {
+        rebuildActive();
+        syncHostListener();
+    }
+});
+
+if (api.permissions && api.permissions.onAdded) {
+    // Granted from the popup (the popup may close while the prompt is up, so
+    // the background reacts to the permission itself, not to the popup).
+    api.permissions.onAdded.addListener(() => syncHostListener());
+    api.permissions.onRemoved.addListener(() => syncHostListener());
+}
+
+if (api.alarms) {
+    api.alarms.create(REFRESH_ALARM, { delayInMinutes: 1, periodInMinutes: REFRESH_MINUTES });
+    api.alarms.onAlarm.addListener((alarm) => {
+        // Nothing is downloaded unless the person opted in to a list.
+        if (alarm.name === REFRESH_ALARM && listsWanted()) {
+            refreshLists();
+        }
+    });
+}
+
+storageGet(['settings'])
+    .then((r) => {
+        applySettings(r.settings);
+        return initLists();
+    })
+    .then(() => {
+        syncHostListener();
+        if (listsWanted()) {
+            refreshLists();
+        }
+    })
+    .catch((e) => console.error('[uSpot] startup failed:', e));
+
 console.log('[uSpot] Ready - watching media requests on scdn.co / spotifycdn.com / open.spotify.com');
+console.log('[uSpot] First-party ad hosts (Layer 3b) active; downloaded host list (Layer 4) and ad file IDs (Layer 5) start on demand');
 console.log('[uSpot] Instant-mode port active - also watching for doubleclick.net / googlesyndication.com / fastly-insights.com / sentry.io / 2mdn.net / adxcel.com / amillionads.com on Spotify tabs');

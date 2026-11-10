@@ -33,6 +33,34 @@ The code that applies the rules — a `webRequest.onBeforeRequest` listener
 returning `{ redirectUrl: ... }` — is this extension's own implementation.
 It does not come from uBlock Origin's `traffic.js`.
 
+## Added in 3.2: ported from the Spotify Web app
+
+These parts come from the author's own Spotify Web Android app, which in turn
+follows SpotiDuck and Myspoti (see that app's `THIRD_PARTY_NOTICES.txt`).
+
+- **`hook.js`** is the app's `ad_state_hook.js` (version 2), adapted to run in
+  a browser extension: the two calls to the Android bridge were replaced with
+  `window.postMessage` to `relay.js`, and the popup switches were added. The
+  hook itself is adapted from **SpotiDuck** by 23fpsz
+  (https://github.com/23fpsz/SpotiDuck-Releases, GPL-3.0), whose file credits
+  Blockify (blockify-desktop) and Spotilol. SpotiDuck is itself built on
+  Spotifuck by deviato.
+- **Myspoti** by kota-zo (https://github.com/kota-zo/myspoti, GPL-3.0): the
+  hook follows four things Myspoti documents about Spotify's web player. No
+  code is copied.
+- **Host list, whitelist and request order** (`lib/hosts.js`, the Layer 3b/4/5
+  code in `background.js`): ported from the app, which follows SpotiDuck's
+  approach (hosts-file and AdBlock-style parsing, host then parent-domain
+  matching, a built-in host set, ad audio file IDs). The 19-host whitelist and
+  its `-spclient.spotify.com` suffix rule mirror the app's `isWhitelisted()`.
+- **`hosts/adblock_hosts.txt`** is compiled by `scripts/compile_hosts.py` from
+  three upstream lists (only plain host rules are taken): Brave Shields
+  first-party list (https://github.com/brave/adblock-lists), uBlock Origin
+  `filters.txt` (https://github.com/uBlockOrigin/uAssets) and AdGuard Mobile
+  Filter `adservers.txt` (https://github.com/AdguardTeam/AdguardFilters),
+  plus `hosts/extra_hosts.txt` minus `hosts/allow_hosts.txt`. The lists stay
+  under their own licenses; check each project for the current terms.
+
 ## License text
 
 - `LICENSE.txt` — this extension's own GPLv3 license.

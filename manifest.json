@@ -1,14 +1,16 @@
 {
   "manifest_version": 2,
   "name": "uSpot - Spotify Adblocker",
-  "version": "3.1",
-  "description": "A browser extension that blocks Spotify web audio ads using the uBlock mv2 approach: blocked ads are replaced with a silent 1-second placeholder.",
+  "version": "3.2",
+  "description": "A browser extension that blocks Spotify web audio ads using the uBlock mv2 approach: blocked ads are replaced with a silent 1-second placeholder. Optional page hook and daily-updated host list.",
   "browser_specific_settings": {
     "gecko": {
       "id": "spotify-adblock-ublock-method-mv2@local",
       "strict_min_version": "142.0",
       "data_collection_permissions": {
-        "required": ["none"],
+        "required": [
+          "none"
+        ],
         "optional": []
       }
     }
@@ -18,26 +20,56 @@
     "webRequestBlocking",
     "storage",
     "tabs",
+    "alarms",
     "*://*.scdn.co/*",
     "*://*.spotifycdn.com/*",
-    "*://open.spotify.com/*",
+    "*://*.spotify.com/*",
     "*://*.doubleclick.net/*",
     "*://*.googlesyndication.com/*",
     "*://*.fastly-insights.com/*",
     "*://*.sentry.io/*",
     "*://*.2mdn.net/*",
     "*://*.adxcel.com/*",
-    "*://*.amillionads.com/*"
+    "*://*.amillionads.com/*",
+    "https://raw.githubusercontent.com/Myst1cX/uSpot/*"
   ],
   "background": {
-    "scripts": ["background.js"],
+    "scripts": [
+      "lib/hosts.js",
+      "background.js"
+    ],
     "persistent": true
   },
   "content_scripts": [
     {
-      "matches": ["https://open.spotify.com/*"],
-      "css": ["styles.css"],
-      "js": ["content_script.js"],
+      "matches": [
+        "https://open.spotify.com/*"
+      ],
+      "js": [
+        "hook.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://open.spotify.com/*"
+      ],
+      "js": [
+        "relay.js"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://open.spotify.com/*"
+      ],
+      "css": [
+        "styles.css"
+      ],
+      "js": [
+        "content_script.js"
+      ],
       "run_at": "document_idle"
     }
   ],
@@ -55,5 +87,11 @@
       "128": "icons/icon128.png"
     }
   },
-  "web_accessible_resources": ["noop-1s.mp4", "empty.txt"]
+  "web_accessible_resources": [
+    "noop-1s.mp4",
+    "empty.txt"
+  ],
+  "optional_permissions": [
+    "<all_urls>"
+  ]
 }
