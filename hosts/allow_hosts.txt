@@ -1,0 +1,31 @@
+# Domains that must never end up in hosts/adblock_hosts.txt, even if an upstream list or
+# extra_hosts.txt has them. Applied last, so it wins. An entry also covers its subdomains.
+# Add a host here when blocking it breaks playback or login.
+
+# --- Mirror of the Spotify Web app's isWhitelisted() (smali/e/f.smali): core hosts that are never blocked ---
+spclient.spotify.com
+login5.spotify.com
+spclient.wg.spotify.com
+open.spotify.com
+api-partner.spotify.com
+partners.wg.spotify.com
+api.spotify.com
+audio4-fa.scdn.co
+seektables.scdn.co
+cast.scdn.co
+audio4-ak.spotifycdn.com
+pickasso.spotifycdn.com
+mosaic.scdn.co
+audio-fa.scdn.co
+shared.akamai.steamstatic.com
+cdn2.smoot.apple.com
+video-fa.scdn.co
+video-ak.scdn.co
+video-ak.spotifycdn.com
+
+# The app also whitelists ANY host ending in "-spclient.spotify.com" (regional shards). A suffix rule
+# can't be written here, so the shards named in the app's docs are listed. They are already dropped by the
+# Spotify-family filter in compile_hosts.py; the real protection is a suffix check in the extension code.
+gew1-spclient.spotify.com
+gae-spclient.spotify.com
+guc-spclient.spotify.com

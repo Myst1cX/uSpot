@@ -1,0 +1,42 @@
+# Hand-maintained extra hosts, always merged into hosts/adblock_hosts.txt.
+# One domain per line, '#' starts a comment. A listed domain also blocks its subdomains.
+# These skip the Spotify-family and podcast filters in scripts/compile_hosts.py.
+
+# --- Spotify first-party ad / tracking endpoints ---
+audio-ads.spotify.com
+ads-akp.spotify.com
+ads-fa.spotify.com
+ads-fa.scdn.co
+mp3ad.scdn.co
+adstudio-assets.scdn.co
+adstudio.spotify.com
+adeventtracker.spotify.com
+pixel.spotify.com
+pixel-static.spotify.com
+aet.spotify.com
+
+# --- Third-party ad / tracking hosts (uSpot's "instant mode" set) ---
+doubleclick.net
+googlesyndication.com
+fastly-insights.com
+sentry.io
+2mdn.net
+adxcel.com
+amillionads.com
+adsrvr.org
+tracker.samplicio.us
+t.6sc.co
+
+# --- LEGACY: carried over from the Spotify Web app's old fallback list ---
+# Per the app's ADBLOCK_FEATURE.md (section 8.1): "9 carried over from the app's old fallback list",
+# hosts "not covered by upstream lists". They predate the compiled list and are kept for parity with the app.
+# Low value on the web player; if one breaks playback or login, remove it here (or add it to allow_hosts.txt).
+googletagservices.com
+google-analytics.com
+app-measurement.com
+quantserve.com
+adnxs.com
+rubiconproject.com
+pubmatic.com
+openx.net
+adserver.adtechus.com
