@@ -50,9 +50,9 @@ b) Firefox:
 | **2. Ad-break detector** | Watches the player for ad UI (`ad-companion-card` etc., selectors from Blockify), mutes the tab, hides the ad card, and **widens layer 1** to every media request on Spotify's domains until the break ends. Backstop for ads served from a host layer 1 doesn't list. | always on |
 | **3. Instant mode** | Blocks ad-network/telemetry hosts (doubleclick.net, googlesyndication.com, fastly-insights.com, sentry.io, 2mdn.net, adxcel.com, amillionads.com), only for requests coming from open.spotify.com tabs. Ported from SpotiDuck. | always on |
 | **3b. First-party ad hosts** | Blocks the 11 Spotify-owned ad/tracking hosts (`aet.`, `pixel.`, `ads-fa.`, `audio-ads.spotify.com`, `mp3ad.scdn.co`, ...). | always on |
-| **4. Host list** | About 1,200 ad/tracker hosts, downloaded daily (see below). Optional podcast ad hosts (omny.fm etc.) use the same mechanism. | **off**, needs an extra permission |
+| **4. Host list** | A list of ad/tracker hosts, rebuilt and downloaded daily (see below; the popup shows the current count). Optional podcast ad hosts (omny.fm etc.) use the same mechanism. | **off**, needs an extra permission |
 | **5. Ad audio file IDs** | When the page hook sees an ad's audio file IDs, any request containing one of them gets the silent clip, even from a CDN host that looks like music. Does nothing for ads that carry no IDs. | on with the hook |
-| **6. Page hook** | Runs inside the Spotify page, reads the player's state, and **leaves ad tracks out of it**, so the player skips the ad instead of waiting for the ad UI to appear and then muting it. Includes a watchdog that only acts if an ad break gets stuck. Ported from the author's Spotify Web app (itself adapted from SpotiDuck). | **on** |
+| **6. Page hook** | Runs inside the Spotify page, reads the player's state, and **leaves ad tracks out of it**, so the player skips the ad instead of waiting for the ad UI to appear and then muting it. Includes a watchdog that only acts if an ad break gets stuck. Ported from my Spotify Web app; see **Credits**. | **on** |
 
 > Layers 3, 3b and 4 only look at requests that come from open.spotify.com, so uSpot never turns into a general-purpose blocker for the rest of your browsing.
 
@@ -95,6 +95,14 @@ b) Firefox:
 # Development
 
 > `node tests/hosts.test.js`, `node tests/background.test.js` and `node tests/hook_relay.test.js` run the unit tests (no dependencies). To change what the list blocks or allows, edit `hosts/extra_hosts.txt` or `hosts/allow_hosts.txt` and push; the workflow recompiles it.
+
+# Credits
+
+> Parts of the ad blocking come from [SpotiDuck](https://github.com/23fpsz/SpotiDuck-Releases) by 23fpsz (GPL-3.0): the ad-ID hook (`ad_state_hook.js`, adapted from Duck's file, which reads the player state and collects the audio file IDs of ads), the hosts list handling and built-in ad host set, and the compiled hosts list's sources and format. The instant-mode hosts in layer 3 are from the same set.
+>
+> The ad markers, the idea of leaving an ad out of the playback state and the way the page's own player is reached (read-only, to watch the playing song and to recover a stuck break) follow what [Myspoti](https://github.com/kota-zo/myspoti) by kota-zo (GPL-3.0) documents about Spotify's web player. The code is new JavaScript, not a copy.
+>
+> The ad-audio path rules and `noop-1s.mp4` come from uBlock Origin, and the ad-break selectors from Blockify. The hook and host list were ported from my own Spotify Web app, which takes them from the projects above. Full credits: `CREDITS.md`.
 
 # See the extension in action:
 

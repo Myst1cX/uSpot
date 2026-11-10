@@ -10,8 +10,10 @@
  * and relay.js sends the popup settings back as {__uspotCfg:1, rewriteOff, recoveryOff} (the popup's
  * "Skip ads in the player" / "Recovery watchdog" switches). The localStorage / sessionStorage kill switches
  * documented below still work as well.
- * Everything else is unchanged from the app's hook; the original header follows. Credits: SpotiDuck
- * (GPL-3.0), myspoti (GPL-3.0), see CREDITS.md.
+ * Everything else is unchanged from the app's hook; the original header follows. Credits (see CREDITS.md): reading
+ * the player state and collecting ad audio file IDs is adapted from SpotiDuck's ad_state_hook.js (GPL-3.0); the ad
+ * markers, the rule for leaving an ad out of the playback state and the way the page's own player is reached follow
+ * what Myspoti (GPL-3.0) documents, written as new JavaScript.
  */
 /*
  * !!! THE AD-CURRENT REPLY FIX (66f) WAS REMOVED IN v2. DO NOT BRING IT BACK. !!!
