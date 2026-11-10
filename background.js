@@ -16,7 +16,7 @@
 //   these rules is this extension's own code, not copied from uBlock
 //   Origin's traffic.js.
 //
-// Later layers (see USPOT_ADBLOCK_METHOD.md): the first-party ad-host list,
+// Later layers (see README.md, "How it works"): the first-party ad-host list,
 // the downloaded host list, the never-block whitelist (lib/hosts.js), ad
 // audio file IDs and the page hook are ported from the Spotify Web app,
 // which in turn follows SpotiDuck (GPL-3.0) - see CREDITS.md.
@@ -353,7 +353,7 @@ api.webRequest.onBeforeRequest.addListener(
 
 // --- "instant" mode port -----------------------------------------------
 //
-// Ported from Spotify_Web_1_0's native interceptor (smali/e/f.smali,
+// Ported from the request interceptor of the author's Spotify Web app, v1.0 (smali/e/f.smali,
 // matchesHardcodedAdDomain(), MODE = "instant"). That method checks a URL
 // against 10 hardcoded ad-network/ad-path substrings, unconditionally,
 // with no remote list and no live probing - see

@@ -35,11 +35,11 @@ It does not come from uBlock Origin's `traffic.js`.
 
 ## Added in 3.2: ported from the Spotify Web app
 
-These parts come from the author's own Spotify Web Android app, which in turn
+These parts come from the author's own Spotify Web app (a separate project that wraps the Spotify web player; it is not an official Spotify app), which in turn
 follows SpotiDuck and Myspoti (see that app's `THIRD_PARTY_NOTICES.txt`).
 
 - **`hook.js`** is the app's `ad_state_hook.js` (version 2), adapted to run in
-  a browser extension: the two calls to the Android bridge were replaced with
+  a browser extension: the two calls to the app's AndBridge were replaced with
   `window.postMessage` to `relay.js`, and the popup switches were added. The
   hook itself is adapted from **SpotiDuck** by 23fpsz
   (https://github.com/23fpsz/SpotiDuck-Releases, GPL-3.0), whose file credits

@@ -3,7 +3,7 @@
  *
  * Runs in the page's own JavaScript world (manifest content_scripts "world": "MAIN", document_start),
  * so it can wrap the page's fetch / WebSocket. It has no access to extension APIs: everything that used to
- * go to the Android app's AndBridge now goes through window.postMessage to relay.js (an isolated content
+ * go to the Spotify Web app's AndBridge (the JavaScript interface that app exposes to its WebView) now goes through window.postMessage to relay.js (an isolated content
  * script), which forwards to background.js:
  *   - AndBridge.dbgt(level, 'adblock', msg)  ->  postMessage {__uspot:1, kind:'log', level, msg}
  *   - AndBridge.recAdContentIds(json)        ->  postMessage {__uspot:1, kind:'ids', ids:[...]}
@@ -105,7 +105,7 @@
   var ID_RE = /^[a-zA-Z0-9_-]{8,128}$/;
   var order = [], seen = {}, lastSent = '';
 
-  // ---- Logger (tag "adblock"); the native side keeps lines only while Debug Logging is on ----
+  // ---- Logger (tag "adblock"); the app keeps lines only while its Debug Logging is on ----
   function log(level, msg) {
     toExt({ kind: 'log', level: level, msg: String(msg) });
   }
