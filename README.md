@@ -106,7 +106,4 @@ b) Firefox:
 
 # See the extension in action:
 
-<img width="300" height="242" alt="image" src="https://github.com/user-attachments/assets/805d03e9-2470-4ba4-b07e-de3561a20fdc" />
-
-<img width="336" height="453" alt="image" src="https://github.com/user-attachments/assets/1e830011-f51b-4507-91fb-c46aaae64a62" />
-
+<img width="335" height="691" alt="image" src="https://github.com/user-attachments/assets/4a6b5d62-e559-4263-b0aa-2bd5b4221b90" />
