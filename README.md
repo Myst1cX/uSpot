@@ -108,4 +108,5 @@ b) Firefox:
 
 <img width="300" height="242" alt="image" src="https://github.com/user-attachments/assets/805d03e9-2470-4ba4-b07e-de3561a20fdc" />
 
-<img width="300" height="242" alt="image" src="https://github.com/user-attachments/assets/6bc6b2b6-3d30-446d-9ebb-9ce981fba21a" />
+<img width="336" height="453" alt="image" src="https://github.com/user-attachments/assets/1e830011-f51b-4507-91fb-c46aaae64a62" />
+
